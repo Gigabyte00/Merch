@@ -1,4 +1,4 @@
-#  pages/billing/subscriptions.tsx – Recurring Billing Interface
+//  pages/billing/subscriptions.tsx – Recurring Billing Interface
 
 import { useEffect, useState } from 'react';
 import { Table } from '@/components/Table';
