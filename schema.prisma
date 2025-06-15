@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  clerkId   String   @unique
+  merchants Merchant[]
+  createdAt DateTime @default(now())
+}
+
+model Merchant {
+  id             String   @id @default(cuid())
+  userId         String
+  businessName   String
+  businessType   String
+  website        String?
+  contactEmail   String
+  routing        String
+  accountNumber  String
+  kycStatus      String
+  cryptoWallet   String?
+  provider       String
+  pricingSheetId String?
+  agencyId       String?
+  onboardingStep Int      @default(1)
+  createdAt      DateTime @default(now())
+
+  user           User     @relation(fields: [userId], references: [id])
+  agency         Agency?  @relation(fields: [agencyId], references: [id])
+  pricingSheet   PricingSheet? @relation(fields: [pricingSheetId], references: [id])
+  commissions    Commission[]
+  customers      Customer[]
+  subscriptions  SubscriptionPlan[]
+  invoices       Invoice[]
+  transactions   Transaction[]
+  alerts         Alert[]
+  disputes       Dispute[]
+}
+
+model Commission {
+  id          String   @id @default(cuid())
+  merchantId  String
+  agencyId    String
+  amount      Float
+  month       Int
+  year        Int
+  createdAt   DateTime @default(now())
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  agency      Agency   @relation(fields: [agencyId], references: [id])
+}
+
+model PricingSheet {
+  id          String   @id @default(cuid())
+  name        String
+  rates       Json
+  createdAt   DateTime @default(now())
+}
+
+model Agency {
+  id         String   @id @default(cuid())
+  name       String
+  referralId String   @unique
+  dashboard  String?
+  createdAt  DateTime @default(now())
+
+  merchants  Merchant[]
+  commissions Commission[]
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  merchantId  String
+  name        String
+  email       String
+  createdAt   DateTime @default(now())
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+}
+
+model SubscriptionPlan {
+  id           String   @id @default(cuid())
+  merchantId   String
+  customerId   String
+  amount       Float
+  interval     String
+  status       String
+  startDate    DateTime
+  endDate      DateTime?
+
+  merchant     Merchant @relation(fields: [merchantId], references: [id])
+  customer     Customer @relation(fields: [customerId], references: [id])
+}
+
+model Invoice {
+  id          String   @id @default(cuid())
+  merchantId  String
+  customerId  String
+  amount      Float
+  status      String
+  dueDate     DateTime
+  paidDate    DateTime?
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  customer    Customer @relation(fields: [customerId], references: [id])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  merchantId  String
+  customerId  String?
+  amount      Float
+  type        String
+  status      String
+  createdAt   DateTime @default(now())
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  customer    Customer? @relation(fields: [customerId], references: [id])
+}
+
+model Alert {
+  id          String   @id @default(cuid())
+  merchantId  String
+  type        String
+  message     String
+  seen        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+}
+
+model Dispute {
+  id          String   @id @default(cuid())
+  merchantId  String
+  transactionId String
+  reason      String
+  status      String
+  submittedAt DateTime
+
+  merchant    Merchant    @relation(fields: [merchantId], references: [id])
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model Forecast {
+  id          String   @id @default(cuid())
+  merchantId  String
+  month       Int
+  year        Int
+  predictedRevenue Float
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+}
