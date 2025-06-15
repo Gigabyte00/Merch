@@ -1,4 +1,4 @@
-//pages/customers/index.tsx – CRM-lite Customer Manager
+//pages/customers/index.tsx – CRM Customer Manager
 
 import { useEffect, useState } from 'react';
 
