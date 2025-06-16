@@ -1,6 +1,6 @@
 # Merchant Services Dashboard
 
-A white-label payment management platform for businesses and referral agencies.
+Poweful payment management platform for businesses and agencies.
 
 ## Folder Overview
 
