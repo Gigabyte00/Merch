@@ -1,34 +1,28 @@
-# Merchant Services Dashboard
+# Merch Cross-Platform Monorepo
 
-Poweful payment management platform for businesses and agencies.
+This repo is now organized as an Expo + Next.js + Firebase monorepo.
 
 ## Folder Overview
 
-- `pages/` – Next.js route pages for the UI
-- `pages/onboarding/` – Multi-step business onboarding
-- `pages/billing/` – Billing and subscription tools
-- `pages/customers/` – Simple CRM for merchants
-- `pages/finance/` – Fee transparency and revenue insights
-- `pages/dashboard/` – Transaction reporting
-- `pages/support/` – Refund management
-- `api/` – Backend API endpoints
-- `lib/` – Payment provider and crypto utilities
-- `prisma/` – Prisma models and migrations
-- `components/` – Reusable React components
+- `apps/web` – Next.js web app
+- `apps/mobile` – Expo React Native app
+- `shared` – Shared business logic and components
+- `firebase` – Firebase config used by both apps
 
-## Development Setup
+## Getting Started
 
-1. Install dependencies:
+1. Install dependencies for all workspaces (requires npm v7+):
    ```bash
    npm install
    ```
-2. Run database migrations (requires PostgreSQL):
+2. Copy `.env.example` files in `apps/web` and `apps/mobile` to `.env` and fill in your Firebase keys.
+3. Run the web app:
    ```bash
-   npx prisma migrate dev --name init
+   npm run --workspace=apps/web dev
    ```
-3. Start the development server:
+4. Run the mobile app:
    ```bash
-   npm run dev
+   npm run --workspace=apps/mobile start
    ```
 
-The app will be available at `http://localhost:3000`.
+Both apps share authentication and user data via Firebase.
